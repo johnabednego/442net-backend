@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ['admin', 'manager', 'registrar', 'consultant'],
+    enum: ['admin', 'supervisor', 'registrar', 'consultant'],
     default: 'consultant'
   },
   tokenVersion: { type: Number, default: 0 },
