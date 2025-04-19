@@ -1,4 +1,5 @@
 const Club = require('../models/Club');
+const Tournament = require('../models/Tournament');
 
 // Ensure user is either Admin or the owner (admin) of the club
 exports.isClubOwnerOrAdmin = async (req, res, next) => {
@@ -15,4 +16,12 @@ exports.isClubOwnerOrAdmin = async (req, res, next) => {
 exports.isSelfOrAdmin = (req, res, next) => {
   if (req.user.role === 'Admin' || req.user._id.equals(req.params.id)) return next();
   return res.status(403).json({ message: 'Forbidden: Can only modify own account' });
+};
+
+
+exports.isTournamentOwnerOrAdmin = async (req, res, next) => {
+  const tournament = await Tournament.findById(req.params.id);
+  if (!tournament) return res.status(404).json({ message: 'Tournament not found' });
+  if (req.user.role === 'Admin' || tournament.createdBy.equals(req.user._id)) { req.tournament = tournament; return next(); }
+  return res.status(403).json({ message: 'Forbidden: Not tournament owner or admin' });
 };
